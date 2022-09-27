@@ -1,0 +1,23 @@
+{
+  "id": "3669874",
+  "name": "中后台管理系统",
+  "font_family": "iconfont",
+  "css_prefix_text": "adm-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "13479185",
+      "name": "开锁",
+      "font_class": "B",
+      "unicode": "e707",
+      "unicode_decimal": 59143
+    },
+    {
+      "icon_id": "13479252",
+      "name": "我的",
+      "font_class": "B1",
+      "unicode": "e70f",
+      "unicode_decimal": 59151
+    }
+  ]
+}
