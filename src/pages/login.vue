@@ -32,7 +32,7 @@
           </el-input>
         </el-form-item>
         <el-form-item label="">
-          <el-button round type="primary" @click="login(formRef)" class="login-btn">立即登录</el-button>
+          <el-button round type="primary" @click="login(formRef)" :loading="loading" class="login-btn">立即登录</el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -41,18 +41,20 @@
 
 <script setup>
 import { reactive,ref } from 'vue'
-import {loginByPwd} from '~/api/user'
+import {loginByPwd, userInfo} from '~/api/user'
 import { ElNotification } from 'element-plus'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
+import { setToken } from '~/utils/auth'
 
 const router = useRouter()
 
 const form = reactive({
-  username: "",
-  password: "",
+  username: "kui",
+  password: "123123",
 })
-const formRef = ref(null)
 
+const formRef = ref(null)
+const loading = ref(false)
 const rules = reactive({
   username: [
     { required: true, message: '用户名不能为空', trigger: 'blur' }
@@ -69,48 +71,27 @@ const login = (valid) => {
       console.log("参数验证失败", fields)
       return
     }
+    loading.value = true
     // 请求后端登录
     loginByPwd({
       user: form.username,
       pass: form.password,
     }).then(res =>{
-      let {errcode, msg, request_id} = res.data
-      if (errcode != 0) {
-          ElNotification({
-          title: msg,
-          message: `errcode=${errcode},request_id=${request_id}`,
-          type: 'error',
-          duration: 0,
-        })
-        return
-      }
       ElNotification({
         title: "登录成功",
         type: 'success',
-
       })
       // 存token以及用户基础信息
-    
+      setToken(res.data.auth)
+      userInfo().then(info => {
+        console.log(info)
+      })
       // 跳转首页
       router.push("/")
-    }).catch(err => {
-      let message,title 
-      if (err) {
-        let {errcode, msg, request_id} = err.response.data
-        title = msg
-        message = `errcode=${errcode},request_id=${request_id}`
-      }else{
-        title = "网络错误,请稍后重试"
-      }
-      ElNotification({
-        title: title,
-        message: message,
-        type: 'error',
-        duration: 0,
-      })
+    }).finally(()=>{
+      loading.value = false
     })
   })
-  console.log("valid passed")
 }
 
 </script>
