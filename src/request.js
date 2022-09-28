@@ -27,7 +27,8 @@ userApi.interceptors.response.use(
         return response.data
     },
     err => {
-        if (!err) {
+        console.log(err)
+        if (!err || !err.response) {
             ElNotification({
                 title: "网络错误,请稍后重试",
                 type: 'error',
@@ -58,14 +59,23 @@ function handel401() {
         type: 'error',
         duration: 0,
     })
-    // TODO: 自动跳转到登录页面
+    // 自动跳转到登录页面
+    window.location.href = "/#"
 }
 
 function handelDefault(response) {
-    let {errcode, msg, request_id} = response.data
+    let title,message
+    if (response.data) {
+        let {errcode, msg, request_id} = response.data
+        title = msg
+        message = `errcode=${errcode},request_id=${request_id}`
+    }else{
+        title = "网络错误,请稍后重试"
+    }
+
     ElNotification({
-        title: msg,
-        message: `errcode=${errcode},request_id=${request_id}`,
+        title,
+        message,
         type: 'error',
         duration: 0,
     })
