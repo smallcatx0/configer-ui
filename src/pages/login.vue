@@ -44,7 +44,7 @@ import { reactive,ref } from 'vue'
 import {loginByPwd, userInfo} from '~/api/user'
 import { ElNotification } from 'element-plus'
 import { useRouter } from 'vue-router'
-import { setToken } from '~/utils/auth'
+import { setToken,SaveUserInfo } from '~/utils/auth'
 
 const router = useRouter()
 
@@ -83,8 +83,9 @@ const login = (valid) => {
       })
       // 存token以及用户基础信息
       setToken(res.data.auth)
+      // 获取用户信息并缓存
       userInfo().then(info => {
-        console.log(info)
+        SaveUserInfo(info.data)
       })
       // 跳转首页
       router.push("/")
