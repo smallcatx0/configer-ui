@@ -26,3 +26,7 @@ export function GetUserInfo() {
     const v = localStorage.getItem(InfoKey)
     return JSON.parse(v)
 }
+
+export function RemoveUserInfo() {
+    localStorage.removeItem(InfoKey)
+}

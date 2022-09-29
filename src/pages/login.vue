@@ -88,7 +88,7 @@ const login = (valid) => {
         SaveUserInfo(info.data)
       })
       // 跳转首页
-      router.push("/")
+      router.push("/admin")
     }).finally(()=>{
       loading.value = false
     })

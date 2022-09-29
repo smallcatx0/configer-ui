@@ -1,8 +1,8 @@
 @font-face {
-  font-family: "iconfont"; /* Project id 3669874 */
-  src: url('iconfont.woff2?t=1664011320115') format('woff2'),
-       url('iconfont.woff?t=1664011320115') format('woff'),
-       url('iconfont.ttf?t=1664011320115') format('truetype');
+  font-family: 'iconfont';  /* Project id 3669874 */
+  src: url('//at.alicdn.com/t/c/font_3669874_87gpwejpjko.woff2?t=1664439522305') format('woff2'),
+       url('//at.alicdn.com/t/c/font_3669874_87gpwejpjko.woff?t=1664439522305') format('woff'),
+       url('//at.alicdn.com/t/c/font_3669874_87gpwejpjko.ttf?t=1664439522305') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,26 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.adm-quanping:before {
+  content: "\e626";
+}
+
+.adm-quxiaoquanping_o:before {
+  content: "\eb98";
+}
+
+.adm-shuaxin:before {
+  content: "\e782";
+}
+
+.adm-zhedie2:before {
+  content: "\e620";
+}
+
+.adm-zhedie1:before {
+  content: "\e621";
 }
 
 .adm-B:before {

@@ -12,6 +12,17 @@ const routes = [
         path: "/login",
         name: "login",
         component: () => import('~/pages/login.vue')
+    },
+    {
+        path: "/admin",
+        name:"admin",
+        component: () => import('~/layout/admin.vue'),
+        children: [
+            {
+                path: "/admin",
+                component: () => import('~/pages/admin/home.vue')
+            }
+        ]
     }
 ]
 
@@ -28,14 +39,15 @@ const router = createRouter({
 })
 
 const LoginPath = '/login'
-const WhiteList = [
-    "/about",
-]
+const WhiteList = {
+    '/': true,
+    '/about': true,
+}
 
 // 路由守卫
 router.beforeEach((to, form, next)=>{
     // 白名单 直接过
-    if (to in WhiteList) {
+    if (to.path in WhiteList) {
         return next()
     }
     // 没有token则跳转登录
