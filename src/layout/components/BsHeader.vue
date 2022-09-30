@@ -67,13 +67,18 @@
       <el-input v-model="modpassForm.email" placeholder="请输入邮箱"/>
     </el-form-item>
     <el-form-item v-if="modpassForm.modBy!='pass'" label="验证码" prop="code">
-      <el-col :span="16">
-        <el-input v-model="modpassForm.code"  placeholder="请输入邮箱"/>
-      </el-col>
-      <el-col :span="1"></el-col>
-      <el-col :span="3">
-        <el-button type="primary">发送验证码</el-button>
-      </el-col>
+      <el-row :gutter="10">
+        <el-col :lg="14" :md="12">
+          <el-input v-model="modpassForm.code"  placeholder="请输入邮箱"/>
+        </el-col>
+        <el-col :lg="8" :md="12">
+          <el-button type="primary"
+            :disabled="sendCodeCost != 0"
+            @click="modpassSendCode(modpassForm.modBy)">
+            {{sendCodeCost == 0? '发送验证码': `重新发送(${sendCodeCost})`}}
+          </el-button>
+        </el-col>
+      </el-row>
     </el-form-item>
     <el-form-item label="新密码" prop="newPassword">
       <el-input v-model="modpassForm.newPassword" type="password" show-password placeholder="请输入新密码" />
@@ -83,8 +88,8 @@
     </el-form-item>
     <div class="flex flex-row-reverse">
       <el-button type="primary" @click="handleModPass(modpassRef)" :loading="modpassLoading" >提交</el-button>
-      <div style="width: 12px;"></div>
-      <el-button @click="">重置</el-button>
+      <div style="width: 10px;"></div>
+      <el-button @click="modpassClear">重置</el-button>
     </div>
   </el-form>
   </el-drawer>
@@ -93,7 +98,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { ElMessageBox } from 'element-plus'
-import {logout} from '~/api/user'
+import {logout, modPass} from '~/api/user'
 import {RemoveUserInfo, delToken } from '~/utils/auth'
 import { useFullscreen } from '@vueuse/core';
 import { useRouter } from 'vue-router'
@@ -107,7 +112,7 @@ const avatarSrc = "https://iph.href.lu/40x40?text=40&fg=3d85c6&bg=eeeeee"
 
 // 刷新页面
 const f5 = () => location.reload()
-// 退出登录
+// 退出登录功能
 const handleLogout = () => {
   ElMessageBox.confirm(
     '现在就要退出吗?',
@@ -127,11 +132,13 @@ const handleLogout = () => {
       router.push({path:"/login"})
     })
 }
+
+// 修改密码功能
 const openModPass = ref(true)
 const modpassRef = ref(null)
 const modpassLoading = ref(false)
 const modpassForm = reactive({
-  modBy: "pass",
+  modBy: "phone",
   password: "",
   phone: "",
   email: "",
@@ -144,26 +151,76 @@ const modpassRules = reactive({
     { required: true, message: '旧密码不能为空', trigger: 'blur' }
   ],
   phone: [
-    { required: true, message: '新密码不能为空', trigger: 'blur' }
+    { required: true, message: '手机号不能为空', trigger: 'blur' }
   ],
   email: [
-    { required: true, message: '确认密码不能为空', trigger: 'blur' }
+    { required: true, message: '邮箱不能为空', trigger: 'blur' }
   ],
   code: [
-    { required: true, message: '确认密码不能为空', trigger: 'blur' }
+    { required: true, message: '验证码不能为空', trigger: 'blur' }
   ],
   newPassword: [
-    { required: true, message: '确认密码不能为空', trigger: 'blur' }
+    { required: true, message: '新密码不能为空', trigger: 'blur' },
+    { validator: (rule, value, callback)=>{
+      if (value == modpassForm.password) {
+        callback(new Error('新旧密码不能相同'))
+        return
+      }
+      callback()
+    }, trigger: 'blur'}
+
   ],
   rePassword: [
-    { required: true, message: '确认密码不能为空', trigger: 'blur' }
+    { required: true, message: '确认密码不能为空', trigger: 'blur' },
+    {
+      validator: (rule, value, callback) => {
+        if (value != modpassForm.newPassword) {
+          callback(new Error('两次输入密码不一致'))
+          return
+        }
+        callback()
+      }, trigger: 'blur'
+    }
   ],
-
 })
 
+const sendCodeCost = ref(0)
+const modpassSendCode = (modBy) =>{
+  // 发送验证码
+  // 按钮disable倒计时 60s
+  sendCodeCost.value = 60
+  let ds = setInterval(()=>{
+    sendCodeCost.value --
+    if (sendCodeCost.value <= 0) {
+      sendCodeCost.value = 0
+      clearInterval(ds)
+    }
+  }, 1000)
+}
 
-const handleModPass = () => {
+const handleModPass = (valid) => {
+  if (!valid) return
+  valid.validate((ok,fields)=>{
+    if(!ok){
+      console.log("参数验证失败", fields)
+      return
+    }
+    modpassLoading.value = true
+    modPass({
+      type: modpassForm.modBy,
+      old_pass: modpassForm.password,
+      pass: modpassForm.newPassword
+    })
+  })
+}
 
+const modpassClear = () =>{
+  modpassForm.password = ''
+  modpassForm.phone = ''
+  modpassForm.email = ''
+  modpassForm.code = ''
+  modpassForm.newPassword = ''
+  modpassForm.rePassword = ''
 }
 
 </script>
