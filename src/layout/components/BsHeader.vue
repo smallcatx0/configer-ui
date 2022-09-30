@@ -20,13 +20,13 @@
         <span class="user">
           <el-avatar :size="40" class="avater" :src="avatarSrc" />
           <span>smallcat</span>
-          <span class="iconfont adm-xiala"></span>
+          <span class="iconfont adm-xiala" style="position:relative; left: 3px; top: 3px;" ></span>
         </span>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item>个人中心</el-dropdown-item>
-            <el-dropdown-item>修改密码</el-dropdown-item>
-            <el-dropdown-item>退出登录</el-dropdown-item>
+            <el-dropdown-item >个人中心</el-dropdown-item>
+            <el-dropdown-item >修改密码</el-dropdown-item>
+            <el-dropdown-item @click="handleLogout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
@@ -38,11 +38,35 @@
 
 <script setup>
 import { ref } from 'vue';
-
+import { ElMessageBox } from 'element-plus'
+import {logout} from '~/api/user'
+import {RemoveUserInfo, delToken } from '~/utils/auth'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const MenuOpen = ref(false)
 const IsFullScreen = ref(false)
 const logoSrc = "https://iph.href.lu/40x40?text=40&fg=3d85c6&bg=eeeeee"
 const avatarSrc = "https://iph.href.lu/40x40?text=40&fg=3d85c6&bg=eeeeee"
+
+const handleLogout = () => {
+  ElMessageBox.confirm(
+    '现在就要退出吗?',
+    '提示',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    }).then(()=>{
+      // 调用后台 退出登录
+      logout()
+      // 清除本地用户信息
+      RemoveUserInfo()
+      // 清除token
+      delToken()
+      // 跳转到登录页
+      router.push({path:"/login"})
+    })
+}
 
 </script>
 <style lang="scss" scoped>
@@ -77,8 +101,8 @@ const avatarSrc = "https://iph.href.lu/40x40?text=40&fg=3d85c6&bg=eeeeee"
     @apply bg-blue-400;
   }
   .user {
-    @apply flex justify-center items-center;
     height: 64px;
+    @apply flex justify-center items-center;
     @apply text-base text-light-100;
     .avater{
       @apply ml-2 mr-2;

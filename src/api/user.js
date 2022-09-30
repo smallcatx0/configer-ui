@@ -8,3 +8,5 @@ export const userInfo = () => get("/v1/user/info")
 // 测试接口
 export const test = () => get("/test")
 
+// 
+export const logout = ()=> postJson('/test')
