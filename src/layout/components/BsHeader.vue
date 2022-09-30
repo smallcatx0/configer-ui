@@ -2,7 +2,7 @@
   <div class="bs-header">
     <div>
       <div class="logo">
-        <el-image :src="logoSrc" fit="cover" />
+        <el-image :src="logoSrc" fit="cover" />````
         <h1>系统配置中心</h1>
       </div>
       <span class="iconfont ico-btu" 
