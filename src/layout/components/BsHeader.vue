@@ -90,6 +90,8 @@
       <el-button type="primary" @click="handleModPass(modpassRef)" :loading="modpassLoading" >提交</el-button>
       <div style="width: 10px;"></div>
       <el-button @click="modpassClear">重置</el-button>
+      <div style="width: 10px;"></div>
+      <el-button @click="openModPass = false">取消</el-button>
     </div>
   </el-form>
   </el-drawer>
@@ -97,7 +99,7 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox,ElNotification } from 'element-plus'
 import {logout, modPass} from '~/api/user'
 import {RemoveUserInfo, delToken } from '~/utils/auth'
 import { useFullscreen } from '@vueuse/core';
@@ -134,7 +136,7 @@ const handleLogout = () => {
 }
 
 // 修改密码功能
-const openModPass = ref(true)
+const openModPass = ref(false)
 const modpassRef = ref(null)
 const modpassLoading = ref(false)
 const modpassForm = reactive({
@@ -206,10 +208,46 @@ const handleModPass = (valid) => {
       return
     }
     modpassLoading.value = true
-    modPass({
+    // 不同类型操作传不同参数
+    let reqBody = {
       type: modpassForm.modBy,
-      old_pass: modpassForm.password,
-      pass: modpassForm.newPassword
+      pass:  modpassForm.newPassword
+    }
+    switch (modpassForm.modBy) {
+      case "pass":
+        reqBody.old_pass = modpassForm.password
+        break
+      case "phone":
+        reqBody.phone = modpassForm.phone
+        reqBody.code = modpassForm.code
+        break
+      case "email":
+        reqBody.code = modpassForm.code
+        reqBody.email = modpassForm.email
+        break
+      default:
+        ElNotification({
+          title: "依据,参数错误",
+          type: 'warning',
+        })
+        return
+    }
+    modPass(reqBody).then(res => {
+      let {errcode,msg} = res
+      if (errcode != 0) {
+        ElNotification({
+          title: msg,
+          type: 'error',
+        })
+        return
+      }
+      ElNotification({
+        title: "操作成功",
+        type: 'success',
+      })
+      openModPass.value = false
+    }).finally(()=>{
+      modpassLoading.value = false
     })
   })
 }

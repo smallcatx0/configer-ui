@@ -80,6 +80,7 @@ const login = (valid) => {
       ElNotification({
         title: "登录成功",
         type: 'success',
+        duration: 3000,
       })
       // 存token以及用户基础信息
       setToken(res.data.auth)
