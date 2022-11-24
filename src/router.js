@@ -47,7 +47,7 @@ const LoginPath = '/login'
 const WhiteList = {
     '/': true,
     '/about': true,
-    // '/admin': true,
+    '/admin': true,
 }
 
 // 路由守卫

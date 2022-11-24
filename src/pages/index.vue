@@ -7,13 +7,13 @@
 </template>
 
 <script setup>
-import {test} from "~/api/user"
+// import {test} from "~/api/user"
 import {GetUserInfo} from '~/utils/auth'
-const out = () => {
-  test().then(res =>{
-    console.log(res)
-  })
-}
+// const out = () => {
+//   test().then(res =>{
+//     console.log(res)
+//   })
+// }
 const info = () =>{
   console.log(GetUserInfo())
 }

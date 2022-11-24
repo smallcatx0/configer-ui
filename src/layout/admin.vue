@@ -1,8 +1,8 @@
 <template>
   <el-container>
-      <el-header><bs-header/></el-header>
+      <el-header ><bs-header/></el-header>
       <el-container>
-        <el-aside width="250px"><bs-menu/></el-aside>
+        <el-aside style="width: auto;"><bs-menu/></el-aside>
         <el-main>
           <bs-tags></bs-tags>
           <router-view/>

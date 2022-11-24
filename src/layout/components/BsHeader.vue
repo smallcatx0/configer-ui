@@ -264,7 +264,7 @@ const modpassClear = () =>{
 </script>
 <style lang="scss" scoped>
 .bs-header {
-  height: 64px;
+  height: 60px;
   @apply flex fixed items-center justify-between;
   @apply bg-blue-500 text-light-50;
   @apply top-0 left-0 right-0;
@@ -286,7 +286,7 @@ const modpassClear = () =>{
   .ico-btu {
     @apply flex justify-center items-center text-xl;
     width: 50px;
-    height: 64px;
+    height: 60px;
     cursor: pointer;
   }
 
@@ -294,7 +294,7 @@ const modpassClear = () =>{
     @apply bg-blue-400;
   }
   .user {
-    height: 64px;
+    height: 60px;
     @apply flex justify-center items-center;
     @apply text-base text-light-100;
     .avater{
