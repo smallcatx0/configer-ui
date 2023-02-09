@@ -8,7 +8,7 @@
       <el-icon><span class="iconfont" :class="item.icon" /></el-icon>
       <template #title>{{item.label}}</template>
     </el-menu-item>
-    <el-sub-menu v-else :index="item.name">
+    <el-sub-menu  v-else :index="item.name">
       <template #title>
         <el-icon><span class="iconfont" :class="item.icon" /></el-icon>
         <span>{{item.label}}</span>
@@ -24,7 +24,7 @@
 
 <script setup>
 import { reactive, ref } from 'vue';
-
+// TODO: 透射出去
 const isCollapse = ref(false)
 
 const authMenu = reactive([
@@ -54,8 +54,11 @@ const authMenu = reactive([
 ])
 
 </script>
-<style scoped>
-.menu{
+<style lang="scss" scoped>
+.menu:not(.el-menu--collapse){
   width: 240px;
+}
+.menu{
+  min-height: 100%;
 }
 </style>

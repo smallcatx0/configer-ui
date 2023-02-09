@@ -1,5 +1,5 @@
 <template>
-  <el-container>
+  <el-container class="main">
       <el-header ><bs-header/></el-header>
       <el-container>
         <el-aside style="width: auto;"><bs-menu/></el-aside>
@@ -19,4 +19,8 @@ import BsTags from './components/BsTags.vue'
 </script>
 
 <style scoped>
+.main{
+  background-color: #f3f4f5;
+  min-height: 100vh;
+}
 </style>

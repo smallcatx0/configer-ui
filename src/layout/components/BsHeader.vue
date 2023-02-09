@@ -280,6 +280,7 @@ const modpassClear = () =>{
 
     h1 {
       @apply pl-2;
+      font-size: 26px;
     }
   }
 
